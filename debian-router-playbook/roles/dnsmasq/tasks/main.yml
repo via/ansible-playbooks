@@ -1,0 +1,19 @@
+---
+
+- name: install dnsmasq
+  package: 
+    name: dnsmasq
+    state: latest
+  notify: restart dnsmasq
+
+- name: dnsmasq's resolve config
+  template:
+    src: etc/dnsmasq.resolv.conf
+    dest: /etc/dnsmasq.resolv.conf
+  notify: restart dnsmasq
+
+- name: configure dnsmasq
+  template:
+    src: etc/dnsmasq.conf
+    dest: /etc/dnsmasq.conf
+  notify: restart dnsmasq

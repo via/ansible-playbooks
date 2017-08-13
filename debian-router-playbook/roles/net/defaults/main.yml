@@ -1,0 +1,7 @@
+external_if:
+internal_if:
+wireless_if:
+
+wireless_ssid: via
+wireless_channel: 6
+wireless_psk:

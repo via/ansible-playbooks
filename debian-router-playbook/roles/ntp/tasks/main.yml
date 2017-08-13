@@ -1,0 +1,13 @@
+---
+
+- name: install openntpd
+  package: 
+    name: openntpd
+    state: latest
+  notify: restart openntpd
+
+- name: configure openntpd
+  template:
+    src: etc/openntpd/ntpd.conf
+    dest: /etc/openntpd/ntpd.conf
+  notify: restart openntpd

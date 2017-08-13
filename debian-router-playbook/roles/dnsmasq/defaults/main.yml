@@ -1,0 +1,10 @@
+internal_if:
+wireless_if:
+
+internal_dhcp_range:
+wireless_dhcp_range:
+
+
+internal_domain:
+internal_domain_network: 192.168.0.0/16
+router_hosts: []

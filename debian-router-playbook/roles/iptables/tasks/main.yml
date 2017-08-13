@@ -1,0 +1,19 @@
+---
+
+- name: configure forwarding
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+
+- name: configure iptables
+  template:
+    src: etc/iptables.rules
+    dest: /etc/iptables.rules
+    mode: 0644
+  notify: reload iptables
+
+- name: add ifup script for iptables
+  template:
+    src: etc/network/if-pre-up.d/iptables
+    dest: /etc/network/if-pre-up.d/iptables
+    mode: 0755

@@ -1,0 +1,12 @@
+---
+
+- name: restart networking
+  service:
+    name: networking
+    state: restarted
+
+- name: restart hostapd
+  service:
+    name: hostapd
+    state: restarted
+    enabled: yes

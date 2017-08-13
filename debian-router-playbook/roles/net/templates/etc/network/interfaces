@@ -1,0 +1,18 @@
+auto lo
+iface lo inet loopback
+
+
+# external
+auto {{ external_if }}
+iface {{ external_if }} inet dhcp
+
+# internal
+auto {{ internal_if }}
+iface {{ internal_if }}  inet static
+  address {{ internal_ip4 }}
+
+# wlan
+auto {{ wireless_if }}
+iface {{ wireless_if }} inet static
+  hostapd /etc/hostapd/hostapd.conf
+  address {{ wireless_ip4 }}

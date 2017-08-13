@@ -1,0 +1,49 @@
+*filter
+-A INPUT -i lo -j ACCEPT
+-A INPUT ! -i lo -d 127.0.0.0/8 -j REJECT
+-A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+-A INPUT -p icmp -j ACCEPT
+
+-A FORWARD -i {{ wireless_if }} -o {{ external_if }} -j ACCEPT
+-A FORWARD -i {{ internal_if }} -o {{ external_if }} -j ACCEPT
+
+-A FORWARD -i {{ internal_if }} -o {{ wireless_if }} -j ACCEPT
+-A FORWARD -i {{ wireless_if }} -o {{ internal_if }} -j ACCEPT
+
+{% for host in router_hosts %}
+{% for forward in host.forwards | default([]) %}
+-A FORWARD -i {{ external_if }} -p {{ forward.proto }} --dport {{ forward.port }} -d {{ host.ip4 }} -j ACCEPT
+{% endfor %}
+{% endfor %}
+-A FORWARD -i {{ external_if }} -m state --state ESTABLISHED,RELATED -j ACCEPT
+-A FORWARD -j REJECT
+
+-A INPUT -i {{ internal_if }} -p tcp --dport ssh -j ACCEPT
+
+# dns
+-A INPUT -i {{ internal_if }} -p tcp --dport domain -j ACCEPT
+-A INPUT -i {{ internal_if }} -p udp --dport domain -j ACCEPT
+-A INPUT -i {{ wireless_if }} -p tcp --dport domain -j ACCEPT
+-A INPUT -i {{ wireless_if }} -p udp --dport domain -j ACCEPT
+
+# dhcp
+-A INPUT -i {{ internal_if }} -p udp --dport 67:68 --sport 67:68 -j ACCEPT
+-A INPUT -i {{ wireless_if }} -p udp --dport 67:68 --sport 67:68 -j ACCEPT
+
+# ntpd
+-A INPUT -i {{ internal_if }} -p udp --dport 123 -j ACCEPT
+-A INPUT -i {{ wireless_if }} -p udp --dport 123 -j ACCEPT
+
+-A OUTPUT -j ACCEPT
+-A INPUT -j REJECT
+
+COMMIT
+
+*nat
+-A POSTROUTING -o {{ external_if }} -j MASQUERADE
+{% for host in router_hosts %}
+{% for forward in host.forwards | default([]) %}
+-A PREROUTING -i {{ external_if }} -p {{ forward.proto }} --dport {{ forward.port }} -j DNAT --to {{ host.ip4 }}:{{ forward.port }}
+{% endfor %}
+{% endfor %}
+COMMIT

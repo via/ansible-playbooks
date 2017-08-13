@@ -1,0 +1,23 @@
+---
+
+- name: interface configuration
+  template:
+    src: etc/network/interfaces
+    dest: /etc/network/interfaces
+  notify: restart networking
+
+
+- name: install hostapd
+  package:
+    name: hostapd
+    state: latest
+  notify: restart networkin
+
+- name: configure hostapd
+  template:
+    src: etc/hostapd/hostapd.conf
+    dest: /etc/hostapd/hostapd.conf
+  notify: restart networking
+
+- name: flush any handlers
+  meta: flush_handlers
