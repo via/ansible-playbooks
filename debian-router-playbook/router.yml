@@ -10,3 +10,4 @@
     - net
     - dnsmasq
     - ntp
+    - pxe

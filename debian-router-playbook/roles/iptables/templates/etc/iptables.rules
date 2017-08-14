@@ -30,6 +30,10 @@
 -A INPUT -i {{ internal_if }} -p udp --dport 67:68 --sport 67:68 -j ACCEPT
 -A INPUT -i {{ wireless_if }} -p udp --dport 67:68 --sport 67:68 -j ACCEPT
 
+# tftp
+-A INPUT -i {{ internal_if }} -p udp --dport 69 -j ACCEPT
+-A INPUT -i {{ wireless_if }} -p udp --dport 69 -j ACCEPT
+
 # ntpd
 -A INPUT -i {{ internal_if }} -p udp --dport 123 -j ACCEPT
 -A INPUT -i {{ wireless_if }} -p udp --dport 123 -j ACCEPT

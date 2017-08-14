@@ -1,0 +1,33 @@
+---
+
+- name: tftpboot directories
+  file: 
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+  with_items:
+    - /var/lib/tftpboot
+    - /var/lib/tftpboot/etc
+
+- name: ipxe menu
+  copy: 
+    src: files/var/lib/tftpboot/boot.ipxe
+    dest: /var/lib/tftpboot/boot.ipxe
+    mode: 0644
+
+- name: openbsd boot.conf
+  copy: 
+    src: files/var/lib/tftpboot/etc/boot.conf
+    dest: /var/lib/tftpboot/etc/boot.conf
+    mode: 0644
+
+- name: ipxe binary
+  copy:
+    src: files/var/lib/tftpboot/ipxe-serial.kpxe
+    dest: /var/lib/tftpboot/ipxe-serial.kpxe
+    mode: 0644
+
+- name: openbsd 6.1 bsd.rd
+  get_url:
+    url: http://ftp3.usa.openbsd.org/pub/OpenBSD/6.1/amd64/bsd.rd
+    dest: /var/lib/tftpboot/openbsd-6.1-bsd.rd
