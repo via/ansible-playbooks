@@ -4,6 +4,7 @@
 -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 -A INPUT -p icmp -j ACCEPT
 
+-A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
 -A FORWARD -i {{ wireless_if }} -o {{ external_if }} -j ACCEPT
 -A FORWARD -i {{ internal_if }} -o {{ external_if }} -j ACCEPT
 -A FORWARD -i {{ dmz_if }} -o {{ external_if }} -j ACCEPT
@@ -12,14 +13,12 @@
 -A FORWARD -i {{ wireless_if }} -o {{ internal_if }} -j ACCEPT
 -A FORWARD -i {{ internal_if }} -o {{ dmz_if }} -j ACCEPT
 -A FORWARD -i {{ wireless_if }} -o {{ dmz_if }} -j ACCEPT
--A FORWARD -i {{ dmz_if }} -m state --state ESTABLISHED,RELATED -j ACCEPT
 
 {% for host in router_hosts %}
 {% for forward in host.forwards | default([]) %}
--A FORWARD -i {{ external_if }} -p {{ forward.proto }} --dport {{ forward.port }} -d {{ host.ip4 }} -j ACCEPT
+-A FORWARD -p {{ forward.proto }} --dport {{ forward.port }} -d {{ host.ip4 }} -j ACCEPT
 {% endfor %}
 {% endfor %}
--A FORWARD -i {{ external_if }} -m state --state ESTABLISHED,RELATED -j ACCEPT
 -A FORWARD -j REJECT
 
 -A INPUT -i {{ internal_if }} -p tcp --dport ssh -j ACCEPT
@@ -56,7 +55,8 @@ COMMIT
 -A POSTROUTING -o {{ external_if }} -j MASQUERADE
 {% for host in router_hosts %}
 {% for forward in host.forwards | default([]) %}
--A PREROUTING -i {{ external_if }} -p {{ forward.proto }} --dport {{ forward.extport | default(forward.port) }} -j DNAT --to {{ host.ip4 }}:{{ forward.port }}
+-A PREROUTING -d {{ external_ip4 }} -p {{ forward.proto }} --dport {{ forward.extport | default(forward.port) }} -j DNAT --to {{ host.ip4 }}:{{ forward.port }}
+-A POSTROUTING -d {{ host.ip4 }} -p {{ forward.proto }} --dport {{ forward.extport | default(forward.port) }} -j MASQUERADE
 {% endfor %}
 {% endfor %}
 COMMIT
