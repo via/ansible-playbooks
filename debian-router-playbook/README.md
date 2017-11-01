@@ -12,3 +12,7 @@ Host requirements:
  - ssh key set up
  - wifi firmware
  - local user with sudo privs
+
+TODO:
+ - collectd
+ - dhclient prepend 127.0.0.1

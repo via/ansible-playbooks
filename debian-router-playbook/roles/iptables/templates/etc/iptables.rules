@@ -6,9 +6,13 @@
 
 -A FORWARD -i {{ wireless_if }} -o {{ external_if }} -j ACCEPT
 -A FORWARD -i {{ internal_if }} -o {{ external_if }} -j ACCEPT
+-A FORWARD -i {{ dmz_if }} -o {{ external_if }} -j ACCEPT
 
 -A FORWARD -i {{ internal_if }} -o {{ wireless_if }} -j ACCEPT
 -A FORWARD -i {{ wireless_if }} -o {{ internal_if }} -j ACCEPT
+-A FORWARD -i {{ internal_if }} -o {{ dmz_if }} -j ACCEPT
+-A FORWARD -i {{ wireless_if }} -o {{ dmz_if }} -j ACCEPT
+-A FORWARD -i {{ dmz_if }} -m state --state ESTABLISHED,RELATED -j ACCEPT
 
 {% for host in router_hosts %}
 {% for forward in host.forwards | default([]) %}
@@ -25,18 +29,23 @@
 -A INPUT -i {{ internal_if }} -p udp --dport domain -j ACCEPT
 -A INPUT -i {{ wireless_if }} -p tcp --dport domain -j ACCEPT
 -A INPUT -i {{ wireless_if }} -p udp --dport domain -j ACCEPT
+-A INPUT -i {{ dmz_if }} -p tcp --dport domain -j ACCEPT
+-A INPUT -i {{ dmz_if }} -p udp --dport domain -j ACCEPT
 
 # dhcp
 -A INPUT -i {{ internal_if }} -p udp --dport 67:68 --sport 67:68 -j ACCEPT
 -A INPUT -i {{ wireless_if }} -p udp --dport 67:68 --sport 67:68 -j ACCEPT
+-A INPUT -i {{ dmz_if }} -p udp --dport 67:68 --sport 67:68 -j ACCEPT
 
 # tftp
 -A INPUT -i {{ internal_if }} -p udp --dport 69 -j ACCEPT
 -A INPUT -i {{ wireless_if }} -p udp --dport 69 -j ACCEPT
+-A INPUT -i {{ dmz_if }} -p udp --dport 69 -j ACCEPT
 
 # ntpd
 -A INPUT -i {{ internal_if }} -p udp --dport 123 -j ACCEPT
 -A INPUT -i {{ wireless_if }} -p udp --dport 123 -j ACCEPT
+-A INPUT -i {{ dmz_if }} -p udp --dport 123 -j ACCEPT
 
 -A OUTPUT -j ACCEPT
 -A INPUT -j REJECT

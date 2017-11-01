@@ -8,8 +8,13 @@ iface {{ external_if }} inet dhcp
 
 # internal
 auto {{ internal_if }}
-iface {{ internal_if }}  inet static
+iface {{ internal_if }} inet static
   address {{ internal_ip4 }}
+
+# dmz
+auto {{ dmz_if }}
+iface {{ dmz_if }} inet static
+  address {{ dmz_ip4 }}
 
 # wlan
 auto {{ wireless_if }}
