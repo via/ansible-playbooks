@@ -56,7 +56,7 @@ COMMIT
 {% for host in router_hosts %}
 {% for forward in host.forwards | default([]) %}
 -A PREROUTING -d {{ external_ip4 }} -p {{ forward.proto }} --dport {{ forward.extport | default(forward.port) }} -j DNAT --to {{ host.ip4 }}:{{ forward.port }}
--A POSTROUTING -d {{ host.ip4 }} -p {{ forward.proto }} --dport {{ forward.extport | default(forward.port) }} -j MASQUERADE
+-A POSTROUTING -s {{ internal_domain_network }} -d {{ host.ip4 }} -p {{ forward.proto }} --dport {{ forward.extport | default(forward.port) }} -j MASQUERADE
 {% endfor %}
 {% endfor %}
 COMMIT
