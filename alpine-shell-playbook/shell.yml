@@ -1,0 +1,10 @@
+---
+
+- hosts: production
+  remote_user: via
+  become: true
+  become_user: root
+  become_method: sudo
+  roles: 
+    - shell
+    - irssi

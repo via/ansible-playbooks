@@ -1,0 +1,7 @@
+user:
+shell_packages:
+  - tmux
+  - tmux-doc
+  - htop
+  - man
+  - man-pages

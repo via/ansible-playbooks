@@ -1,0 +1,21 @@
+---
+
+- name: install irssi
+  apk:
+    name: irssi
+    state: present
+
+- name: parenthetical theme
+  become: "{{ user }}"
+  copy:
+    src: parenthetical.theme
+    dest: "$HOME/.irssi/parenthetical.theme"
+
+
+- name: irssi config file
+  become: "{{ user }}"
+  template: 
+    src: config
+    dest: "$HOME/.irssi/config"
+    mode: 0600
+

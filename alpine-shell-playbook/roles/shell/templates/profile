@@ -1,0 +1,2 @@
+LC_ALL=utf8
+export LC_ALL

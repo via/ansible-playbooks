@@ -1,0 +1,15 @@
+---
+
+- name: shell profile
+  template:
+    src: profile
+    dest: "$HOME/.profile"
+    mode: 0644
+  become: "{{ user }}"
+
+- name: install desired shell packages
+  apk:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ shell_packages }}"
+
