@@ -1,0 +1,13 @@
+---
+
+- name: install collectd
+  package:
+    name: collectd
+    state: latest
+  notify: restart collectd
+
+- name: configure collectd
+  template:
+    src: etc/collectd/collectd.conf
+    dest: /etc/collectd/collectd.conf
+  notify: restart collectd

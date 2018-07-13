@@ -1,0 +1,7 @@
+---
+
+- name: restart collectd
+  service:
+    name: collectd
+    state: restarted
+    enabled: yes
