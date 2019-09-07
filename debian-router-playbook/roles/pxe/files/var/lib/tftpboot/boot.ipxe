@@ -2,8 +2,8 @@
 :start
 menu iPXE boot menu
 item --gap --             ------------------------- Operating systems ------------------------------
-item --key o openbsd      Boot OpenBSD 6.1 pxeboot
-item --key d debian9      Boot Debian 9
+item --key o openbsd      Boot OpenBSD 6.5 pxeboot
+item --key d debian-stable      Boot Debian Stable
 item --gap --             ------------------------- Tools and utilities ----------------------------
 item --key p pxelinux     Load PXELinux menu
 item --gap --             ------------------------- Advanced options -------------------------------
@@ -15,9 +15,9 @@ choose --timeout 0 --default exit selected
 goto ${selected}
 
 :openbsd 
-chain http://ftp3.usa.openbsd.org/pub/OpenBSD/6.1/amd64/pxeboot || goto start
+chain http://ftp3.usa.openbsd.org/pub/OpenBSD/6.5/amd64/pxeboot || goto start
 
-:debian9
+:debian-stable
 set base-url http://cdn-fastly.deb.debian.org/debian/dists/stable/main/installer-amd64/current/images/netboot
 kernel ${base-url}/debian-installer/amd64/linux
 initrd ${base-url}/debian-installer/amd64/initrd.gz
